@@ -29,7 +29,6 @@ router.get('/play', function(req, res, next) {
 router.get('/pause', function(req, res, next) {
   //res.render('index', { title: 'PAUSED' });
   console.log('pause request received')
-  console.log('play request received')
   var data;
   fs.readFile('public/data/appState.json', 'utf8', function(err, data) {
     if (err) {
@@ -44,12 +43,19 @@ router.get('/pause', function(req, res, next) {
   })
 })
 
-router.get('/getState', function (req, res, next) {
-  axios.get('../')
-})
-
 router.post('/shiftSlider', function(req,res,next) {
-  console.log('shiftSlider received')
+  req.body.value
+  fs.readFile('public/data/appState.json', 'utf8', function(err, data) {
+    if (err) {
+      throw err;
+    }
+    data = JSON.parse(data)
+    data.sliderHead = req.body.value
+    data = JSON.stringify(data)
+    fs.writeFile('public/data/appState.json', data, 'utf8', function(err) {
+      if (err) return console.log(err);
+    })
+  })
 })
 
 router.post('/connect', function (req, res, next) {
