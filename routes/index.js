@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var axios = require('axios')
+var fetch = require('node-fetch')
+var fs = require('fs')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -9,11 +12,40 @@ router.get('/', function(req, res, next) {
 router.get('/play', function(req, res, next) {
   //res.render('index', { title: 'PLAYING' });
   console.log('play request received')
+  var data;
+  fs.readFile('public/data/appState.json', 'utf8', function(err, data) {
+    if (err) {
+      throw err;
+    }
+    data = JSON.parse(data)
+    data.playing = true
+    data = JSON.stringify(data)
+    fs.writeFile('public/data/appState.json', data, 'utf8', function(err) {
+      if (err) return console.log(err);
+    })
+  })
 })
 
 router.get('/pause', function(req, res, next) {
   //res.render('index', { title: 'PAUSED' });
   console.log('pause request received')
+  console.log('play request received')
+  var data;
+  fs.readFile('public/data/appState.json', 'utf8', function(err, data) {
+    if (err) {
+      throw err;
+    }
+    data = JSON.parse(data)
+    data.playing = false
+    data = JSON.stringify(data)
+    fs.writeFile('public/data/appState.json', data, 'utf8', function(err) {
+      if (err) return console.log(err);
+    })
+  })
+})
+
+router.get('/getState', function (req, res, next) {
+  axios.get('../')
 })
 
 router.post('/shiftSlider', function(req,res,next) {
